@@ -13,7 +13,12 @@ namespace AssetTracker.Infrastructure
                 pattern: "/register/user",
                 defaults: new { controller = "Users", action = "Register" });
 
-            
+            endpoints.MapControllerRoute(
+                name: "register",
+                pattern: "/register/admin",
+                defaults: new { controller = "Admin", action = "Register" });
+
+
             endpoints.MapControllerRoute(
                 name: "login",
                 pattern: "login",

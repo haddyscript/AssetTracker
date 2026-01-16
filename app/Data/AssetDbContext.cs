@@ -12,6 +12,7 @@ namespace AssetTracker.Data
 
         public DbSet<Asset> Assets { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Admin> Admins { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -19,6 +20,9 @@ namespace AssetTracker.Data
 
             // ensure username is unique
             modelBuilder.Entity<User>().HasIndex(u => u.username).IsUnique();
+
+            // ensure admin username is unique
+            modelBuilder.Entity<Admin>().HasIndex(a => a.username).IsUnique();
         }
     }
 }

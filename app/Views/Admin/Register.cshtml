@@ -1,0 +1,75 @@
+@model AssetTracker.Models.Admin
+
+@{
+    ViewBag.Title = "Register Admin";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow">
+
+                <div class="card-header bg-danger text-white text-center">
+                    <h4 class="mb-0">Register Admin</h4>
+                </div>
+
+                <div class="card-body">
+                    @using (Html.BeginForm("Register", "Admin", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.username, new { @class = "form-label" })
+                            @Html.TextBoxFor(
+                                m => m.username,
+                                new { @class = "form-control", placeholder = "Enter username" }
+                            )
+                            @Html.ValidationMessageFor(m => m.username, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.email, new { @class = "form-label" })
+                            @Html.TextBoxFor(
+                                m => m.email,
+                                new { @class = "form-control", placeholder = "Enter email" }
+                            )
+                            @Html.ValidationMessageFor(m => m.email, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.full_name, new { @class = "form-label" })
+                            @Html.TextBoxFor(
+                                m => m.full_name,
+                                new { @class = "form-control", placeholder = "Enter full name" }
+                            )
+                            @Html.ValidationMessageFor(m => m.full_name, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.password_hash, "Password", new { @class = "form-label" })
+                            @Html.PasswordFor(
+                                m => m.password_hash,
+                                new { @class = "form-control", placeholder = "Enter password" }
+                            )
+                            @Html.ValidationMessageFor(m => m.password_hash, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-danger">
+                                Register Admin
+                            </button>
+
+                            <a href="@Url.Action("Login", "Users")"
+                               class="btn btn-outline-danger">
+                                Already have an account? Login
+                            </a>
+                        </div>
+                    }
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>

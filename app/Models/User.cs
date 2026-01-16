@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AssetTracker.Models
 {
@@ -25,7 +26,18 @@ namespace AssetTracker.Models
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         [MinLength(8, ErrorMessage = "Password must be at least 8 characters")]
-        public string password { get; set; } 
+        public string password { get; set; }
+
+
+        // -------------------------------
+        // user profile foreign key
+
+        [Required]
+        [ForeignKey("UserProfile")]
+        public int user_profile { get; set; }
+
+        public UserProfile UserProfile { get; set; }
+
     }
 }
 
