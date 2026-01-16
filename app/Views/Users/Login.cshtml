@@ -1,0 +1,72 @@
+﻿@model AssetTracker.Models.User
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+
+            <div class="card shadow">
+                <div class="card-header bg-dark text-white text-center">
+                    <h4 class="mb-0">User Login</h4>
+                </div>
+
+                <div class="card-body">
+                    @using (Html.BeginForm("Login", "Users", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+
+                        
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.username, new { @class = "form-label" })
+                            @Html.TextBoxFor(
+                                m => m.username,
+                                new { @class = "form-control", placeholder = "Enter username" }
+                            )
+                            @Html.ValidationMessageFor(m => m.username, "", new { @class = "text-danger" })
+                        </div>
+
+                        
+                        <div class="mb-3">
+                            @Html.LabelFor(m => m.password, new { @class = "form-label" })
+                            @Html.PasswordFor(
+                                m => m.password,
+                                new { @class = "form-control", placeholder = "Enter password" }
+                            )
+                            @Html.ValidationMessageFor(m => m.password, "", new { @class = "text-danger" })
+                        </div>
+
+                        
+                        @if (ViewBag.Error != null)
+                        {
+                            <div class="alert alert-danger">
+                                @ViewBag.Error
+                            </div>
+                        }
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-dark">
+                                Login
+                            </button>
+
+                            
+                            <a href="@Url.Action("Register", "Users")"
+                               class="btn btn-outline-dark">
+                                No account yet? Register
+                            </a>
+                        </div>
+                    }
+                </div>
+
+                <div class="card-footer text-center">
+                    <small class="text-muted">
+                        Asset Tracker System
+                    </small>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
