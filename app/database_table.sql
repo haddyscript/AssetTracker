@@ -68,5 +68,24 @@ CREATE TABLE [dbo].[assets] (
 ALTER TABLE [dbo].[assets] ADD
 	FOREIGN KEY ([assigned_to_user_id]) REFERENCES [users] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+DROP TABLE IF EXISTS [dbo].[asset_requests];
+CREATE TABLE [dbo].[asset_requests] (
+	[id] int NOT NULL IDENTITY PRIMARY KEY,
+	[user_id] int NOT NULL,
+	[asset_id] int NOT NULL,
+	[request_type] nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[status] nvarchar(20) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL DEFAULT 'Pending',
+	[requested_at] datetime NOT NULL DEFAULT '(getdate())',
+	[approved_at] datetime NULL,
+	[approved_by_admin_id] int NULL,
+	[remarks] nvarchar(500) COLLATE SQL_Latin1_General_CP1_CI_AS NULL
+);
+
+
+ALTER TABLE [dbo].[asset_requests] ADD
+	FOREIGN KEY ([approved_by_admin_id]) REFERENCES [admins] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY ([asset_id]) REFERENCES [assets] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	FOREIGN KEY ([user_id]) REFERENCES [users] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
 
 -- 2026-01-16 07:18:10 UTC

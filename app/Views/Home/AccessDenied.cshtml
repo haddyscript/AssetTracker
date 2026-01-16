@@ -1,0 +1,31 @@
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">
+                        <i class="fas fa-exclamation-triangle"></i> Access Denied
+                    </h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-lock fa-4x text-danger"></i>
+                    </div>
+                    <h5 class="card-title">You don't have permission to access this page</h5>
+                    <p class="card-text">
+                        This page requires administrator privileges. If you believe this is an error,
+                        please contact your system administrator.
+                    </p>
+                    <div class="mt-4">
+                        <a href="@Url.Action("Index", "Home")" class="btn btn-primary me-2">
+                            <i class="fas fa-home"></i> Go to Dashboard
+                        </a>
+                        <a href="@Url.Action("Index", "Asset")" class="btn btn-secondary">
+                            <i class="fas fa-list"></i> View Assets
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

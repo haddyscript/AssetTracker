@@ -19,6 +19,11 @@ namespace AssetTracker.Infrastructure
                 defaults: new { controller = "Admin", action = "Register" });
 
             endpoints.MapControllerRoute(
+               name: "view all asset",
+               pattern: "/view/all/asset",
+               defaults: new { controller = "Asset", action = "Index" });
+
+            endpoints.MapControllerRoute(
                name: "create asset",
                pattern: "/create/asset",
                defaults: new { controller = "Asset", action = "Create" });
@@ -27,6 +32,11 @@ namespace AssetTracker.Infrastructure
                 name: "update asset detail",
                 pattern: "update/asset/{id?}",
                 defaults: new { controller = "Asset", action = "Edit" });
+
+            endpoints.MapControllerRoute(
+                name: "view asset detail",
+                pattern: "view/asset/detail/{id?}",
+                defaults: new { controller = "Asset", action = "Details" });
 
 
             endpoints.MapControllerRoute(

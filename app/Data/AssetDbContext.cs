@@ -13,6 +13,7 @@ namespace AssetTracker.Data
         public DbSet<Asset> Assets { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Admin> Admins { get; set; }
+        public DbSet<AssetRequest> AssetRequests { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

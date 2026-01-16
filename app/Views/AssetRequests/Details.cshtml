@@ -1,0 +1,113 @@
+@model AssetTracker.Models.AssetRequest
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="fas fa-file-alt"></i> Request Details</h2>
+        <div>
+            @if (User.IsInRole("Admin"))
+            {
+                <a href="@Url.Action("Index")" class="btn btn-secondary me-2">
+                    <i class="fas fa-arrow-left"></i> Back to Requests
+                </a>
+            }
+            else
+            {
+                <a href="@Url.Action("MyRequests")" class="btn btn-secondary me-2">
+                    <i class="fas fa-arrow-left"></i> Back to My Requests
+                </a>
+            }
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Request Information</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Request ID:</dt>
+                                <dd class="col-sm-8">@Model.id</dd>
+
+                                <dt class="col-sm-4">Request Type:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge @(Model.request_type == "Borrow" ? "bg-primary" : "bg-info")">
+                                        @Model.request_type
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Status:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge @(
+                                        Model.status == "Pending" ? "bg-warning" :
+                                        Model.status == "Approved" ? "bg-success" :
+                                        Model.status == "Rejected" ? "bg-danger" : "bg-secondary")">
+                                        @Model.status
+                                    </span>
+                                </dd>
+
+                                <dt class="col-sm-4">Requested At:</dt>
+                                <dd class="col-sm-8">@Model.requested_at.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">User:</dt>
+                                <dd class="col-sm-8">@Model.user?.username</dd>
+
+                                <dt class="col-sm-4">Approved At:</dt>
+                                <dd class="col-sm-8">@(Model.approved_at?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A")</dd>
+
+                                <dt class="col-sm-4">Approved By:</dt>
+                                <dd class="col-sm-8">@(Model.approved_by_admin?.full_name ?? "N/A")</dd>
+
+                                <dt class="col-sm-4">Returned At:</dt>
+                                <dd class="col-sm-8">@(Model.returned_at?.ToString("yyyy-MM-dd HH:mm:ss") ?? "N/A")</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.remarks))
+                    {
+                        <div class="row">
+                            <div class="col-12">
+                                <dt>Remarks:</dt>
+                                <dd>@Model.remarks</dd>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Asset Information</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4">Asset Tag:</dt>
+                        <dd class="col-sm-8">@Model.asset?.asset_tag</dd>
+
+                        <dt class="col-sm-4">Name:</dt>
+                        <dd class="col-sm-8">@Model.asset?.asset_name</dd>
+
+                        <dt class="col-sm-4">Category:</dt>
+                        <dd class="col-sm-8">@Model.asset?.category</dd>
+
+                        <dt class="col-sm-4">Status:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge @(Model.asset?.status == "Available" ? "bg-success" : Model.asset?.status == "Assigned" ? "bg-primary" : "bg-warning")">
+                                @Model.asset?.status
+                            </span>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

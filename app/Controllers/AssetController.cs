@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using AssetTracker.Models;
 using AssetTracker.Data;
 using Microsoft.EntityFrameworkCore;
+using AssetTracker.Attributes;
 
 namespace AssetTracker.Controllers
 {
@@ -44,6 +45,7 @@ namespace AssetTracker.Controllers
         }
 
         // GET: Asset/Create
+        [AdminOnly]
         public IActionResult Create()
         {
             ViewBag.Users = _context.Users.ToList();
@@ -53,6 +55,7 @@ namespace AssetTracker.Controllers
         // POST: Asset/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public async Task<IActionResult> Create([Bind("asset_tag,asset_name,description,category,brand,model,serial_number,purchase_date,purchase_price,status,condition,assigned_to_user_id,assigned_date")] Asset asset)
         {
             if (ModelState.IsValid)
@@ -80,6 +83,7 @@ namespace AssetTracker.Controllers
         }
 
         // GET: Asset/Edit/5
+        [AdminOnly]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -99,6 +103,7 @@ namespace AssetTracker.Controllers
         // POST: Asset/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public async Task<IActionResult> Edit(int id, [Bind("id,asset_tag,asset_name,description,category,brand,model,serial_number,purchase_date,purchase_price,status,condition,assigned_to_user_id,assigned_date,created_at")] Asset asset)
         {
             if (id != asset.id)
@@ -146,6 +151,7 @@ namespace AssetTracker.Controllers
         }
 
         // GET: Asset/Delete/5
+        [AdminOnly]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -167,6 +173,7 @@ namespace AssetTracker.Controllers
         // POST: Asset/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [AdminOnly]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var asset = await _context.Assets.FindAsync(id);

@@ -1,0 +1,82 @@
+@model AssetTracker.Models.Asset
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="fas fa-hand-holding"></i> Request to Borrow Asset</h2>
+        <a href="@Url.Action("Index", "Asset")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Assets
+        </a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Asset Details</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Asset Tag:</dt>
+                                <dd class="col-sm-8">@Model.asset_tag</dd>
+
+                                <dt class="col-sm-4">Name:</dt>
+                                <dd class="col-sm-8">@Model.asset_name</dd>
+
+                                <dt class="col-sm-4">Category:</dt>
+                                <dd class="col-sm-8">@Model.category</dd>
+
+                                <dt class="col-sm-4">Brand:</dt>
+                                <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.brand) ? "N/A" : Model.brand)</dd>
+                            </dl>
+                        </div>
+                        <div class="col-md-6">
+                            <dl class="row">
+                                <dt class="col-sm-4">Model:</dt>
+                                <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.model) ? "N/A" : Model.model)</dd>
+
+                                <dt class="col-sm-4">Status:</dt>
+                                <dd class="col-sm-8">
+                                    <span class="badge bg-success">@Model.status</span>
+                                </dd>
+
+                                <dt class="col-sm-4">Condition:</dt>
+                                <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.condition) ? "N/A" : Model.condition)</dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Borrow Request</h5>
+                </div>
+                <div class="card-body">
+                    @using (Html.BeginForm("CreateBorrowRequest", "AssetRequests", FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.Hidden("assetId", Model.id)
+
+                        <div class="mb-3">
+                            @Html.Label("remarks", "Additional Remarks (Optional)", new { @class = "form-label" })
+                            @Html.TextArea("remarks", "", new { @class = "form-control", rows = 4, placeholder = "Any additional information or reason for borrowing..." })
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Submit Borrow Request
+                            </button>
+                            <a href="@Url.Action("Index", "Asset")" class="btn btn-secondary">
+                                <i class="fas fa-times"></i> Cancel
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

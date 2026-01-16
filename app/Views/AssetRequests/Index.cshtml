@@ -1,0 +1,138 @@
+@model IEnumerable<AssetTracker.Models.AssetRequest>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="fas fa-clipboard-list"></i> Asset Requests Management</h2>
+        <a href="@Url.Action("Index", "Asset")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Assets
+        </a>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show">
+            <i class="fas fa-check-circle"></i> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show">
+            <i class="fas fa-exclamation-triangle"></i> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No asset requests found.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Request ID</th>
+                        <th>User</th>
+                        <th>Asset</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Requested At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var request in Model)
+                    {
+                        <tr>
+                            <td>@request.id</td>
+                            <td>@request.user?.username</td>
+                            <td>@request.asset?.asset_name</td>
+                            <td>
+                                <span class="badge @(request.request_type == "Borrow" ? "bg-primary" : "bg-info")">
+                                    @request.request_type
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge @(
+                                    request.status == "Pending" ? "bg-warning" :
+                                    request.status == "Approved" ? "bg-success" :
+                                    request.status == "Rejected" ? "bg-danger" : "bg-secondary")">
+                                    @request.status
+                                </span>
+                            </td>
+                            <td>@request.requested_at.ToString("yyyy-MM-dd HH:mm")</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a href="@Url.Action("Details", new { id = request.id })"
+                                       class="btn btn-sm btn-info">
+                                        <i class="fas fa-eye"></i> Details
+                                    </a>
+
+                                    @if (request.status == "Pending")
+                                    {
+                                        if (request.request_type == "Borrow")
+                                        {
+                                            <form method="post" action="@Url.Action("Approve", new { id = request.id })" class="d-inline"
+                                                  onsubmit="return confirm('Are you sure you want to approve this borrow request?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="adminRemarks" value="" />
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-check"></i> Approve
+                                                </button>
+                                            </form>
+
+                                            <form method="post" action="@Url.Action("Reject", new { id = request.id })" class="d-inline"
+                                                  onsubmit="return confirm('Are you sure you want to reject this request?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="adminRemarks" value="" />
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-times"></i> Reject
+                                                </button>
+                                            </form>
+                                        }
+                                        else if (request.request_type == "Return")
+                                        {
+                                            <form method="post" action="@Url.Action("Approve", new { id = request.id })" class="d-inline"
+                                                  onsubmit="return confirm('Are you sure you want to approve this return request?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="adminRemarks" value="" />
+                                                <button type="submit" class="btn btn-sm btn-success">
+                                                    <i class="fas fa-check"></i> Approve
+                                                </button>
+                                            </form>
+
+                                            <form method="post" action="@Url.Action("Reject", new { id = request.id })" class="d-inline"
+                                                  onsubmit="return confirm('Are you sure you want to reject this return request?');">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="adminRemarks" value="" />
+                                                <button type="submit" class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-times"></i> Reject
+                                                </button>
+                                            </form>
+                                        }
+                                    }
+                                    else if (request.status == "Approved" && request.request_type == "Return")
+                                    {
+                                        <form method="post" action="@Url.Action("ConfirmReturn", new { id = request.id })" class="d-inline"
+                                              onsubmit="return confirm('Confirm that the asset has been returned?');">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="adminRemarks" value="" />
+                                            <button type="submit" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-check-double"></i> Confirm Return
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

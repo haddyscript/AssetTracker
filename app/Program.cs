@@ -37,6 +37,8 @@ catch (Exception ex)
 
 builder.Services.AddDbContext<AssetDbContext>(options =>options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Register custom services
+builder.Services.AddScoped<AssetTracker.Services.AuthorizationService>();
 
 var app = builder.Build();
 // Configure HTTP request pipeline

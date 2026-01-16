@@ -1,0 +1,50 @@
+using AssetTracker.Data;
+using AssetTracker.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace AssetTracker.Services
+{
+    public class AuthorizationService
+    {
+        private readonly AssetDbContext _context;
+
+        public AuthorizationService(AssetDbContext context)
+        {
+            _context = context;
+        }
+
+        /// <summary>
+        /// Checks if a user has admin privileges (Admin or Super Admin profile)
+        /// </summary>
+        /// <param name="userId">The user ID to check</param>
+        /// <returns>True if user is admin, false otherwise</returns>
+        public async Task<bool> IsUserAdminAsync(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserProfile)
+                .FirstOrDefaultAsync(u => u.id == userId);
+
+            if (user == null || user.UserProfile == null)
+            {
+                return false;
+            }
+
+            var profileName = user.UserProfile.profile_name;
+            return profileName == "Admin" || profileName == "Super Admin";
+        }
+
+        /// <summary>
+        /// Gets the profile name for a user
+        /// </summary>
+        /// <param name="userId">The user ID</param>
+        /// <returns>The profile name or null if user not found</returns>
+        public async Task<string> GetUserProfileNameAsync(int userId)
+        {
+            var user = await _context.Users
+                .Include(u => u.UserProfile)
+                .FirstOrDefaultAsync(u => u.id == userId);
+
+            return user?.UserProfile?.profile_name;
+        }
+    }
+}
