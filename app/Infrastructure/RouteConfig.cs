@@ -19,6 +19,16 @@ namespace AssetTracker.Infrastructure
                 pattern: "login",
                 defaults: new { controller = "Users", action = "Login" });
 
+            endpoints.MapControllerRoute(
+                name: "logout",
+                pattern: "logout",
+                defaults: new { controller = "Users", action = "Logout" });
+            
+            endpoints.MapControllerRoute(
+                name: "home",
+                pattern: "home",
+                defaults: new { controller = "Home", action = "Index" });
+
             
             endpoints.MapControllerRoute(
                 name: "default",
