@@ -2,69 +2,185 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using AssetTracker.Models;
+using AssetTracker.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace AssetTracker.Controllers
 {
 	public class AssetController : Controller
     {
-        private static List<Asset> assetList = new List<Asset>()
-        {
-            new Asset { id = 1, assetName = "Shabu", Category = "SWAP", Quantity = 5, AssignedTo = "Lodi Cakes" },
-            new Asset { id = 2, assetName = "Marijuana", Category = "CASH", Quantity = 5, AssignedTo = "Lodi Biscuit" },
-            new Asset { id = 3, assetName = "Sigarilyo", Category = "CASH", Quantity = 5, AssignedTo = "Lodhan" },
-            new Asset { id = 4, assetName = "Sigamata", Category = "CASH", Quantity = 5, AssignedTo = "Luwaan" }
-        };
+        private readonly AssetDbContext _context;
 
-        public IActionResult Index()
+        public AssetController(AssetDbContext context)
         {
-            return View(assetList);
+            _context = context;
         }
-        public IActionResult Add()
+
+        // GET: Asset
+        public async Task<IActionResult> Index()
         {
-            return View();
+            var assets = await _context.Assets.Include(a => a.assigned_user).ToListAsync();
+            return View(assets);
         }
+
+        // GET: Asset/Details/5
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var asset = await _context.Assets
+                .Include(a => a.assigned_user)
+                .FirstOrDefaultAsync(m => m.id == id);
+
+            if (asset == null)
+            {
+                return NotFound();
+            }
+
+            return View(asset);
+        }
+
+        // GET: Asset/Create
+        public IActionResult Create()
+        {
+            ViewBag.Users = _context.Users.ToList();
+            return View(new Asset());
+        }
+
+        // POST: Asset/Create
         [HttpPost]
-        public ActionResult Add(Asset asset)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("asset_tag,asset_name,description,category,brand,model,serial_number,purchase_date,purchase_price,status,condition,assigned_to_user_id,assigned_date")] Asset asset)
         {
             if (ModelState.IsValid)
             {
-                asset.id = assetList.Count + 1;
-                assetList.Add(asset);
-                return RedirectToAction("Index");
+                asset.created_at = DateTime.Now;
+                asset.updated_at = DateTime.Now;
+                _context.Add(asset);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
             }
+
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Asset Create Validation Error: {error.ErrorMessage}");
+                }
+
+                ModelState.AddModelError("", "Please correct the errors below and try again.");
+            }
+
+            ViewBag.Users = _context.Users.ToList();
             return View(asset);
         }
 
-        public ActionResult Edit(int id)
+        // GET: Asset/Edit/5
+        public async Task<IActionResult> Edit(int? id)
         {
-            var asset = assetList.FirstOrDefault(ass => ass.id == id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var asset = await _context.Assets.FindAsync(id);
+            if (asset == null)
+            {
+                return NotFound();
+            }
+            ViewBag.Users = _context.Users.ToList();
+            return View(asset);
+        }
+
+        // POST: Asset/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("id,asset_tag,asset_name,description,category,brand,model,serial_number,purchase_date,purchase_price,status,condition,assigned_to_user_id,assigned_date,created_at")] Asset asset)
+        {
+            if (id != asset.id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    asset.updated_at = DateTime.Now;
+                    _context.Update(asset);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!AssetExists(asset.id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Debug: Log validation errors
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Asset Edit Validation Error: {error.ErrorMessage}");
+                }
+
+                // Add a general error message for users
+                ModelState.AddModelError("", "Please correct the errors below and try again.");
+            }
+
+            ViewBag.Users = _context.Users.ToList();
+            return View(asset);
+        }
+
+        // GET: Asset/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var asset = await _context.Assets
+                .Include(a => a.assigned_user)
+                .FirstOrDefaultAsync(m => m.id == id);
+            if (asset == null)
+            {
+                return NotFound();
+            }
 
             return View(asset);
         }
-        public ActionResult EditAction(Asset asset)
+
+        // POST: Asset/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var lubot = assetList.Where(ass => ass.id == asset.id).FirstOrDefault();
-            if (lubot == null)
+            var asset = await _context.Assets.FindAsync(id);
+            if (asset != null)
             {
-                return BadRequest("Asset not found"); 
+                _context.Assets.Remove(asset);
+                await _context.SaveChangesAsync();
             }
-            lubot.assetName = asset.assetName;
-            lubot.Category = asset.Category;
-            lubot.Quantity = asset.Quantity;
-            lubot.AssignedTo = asset.AssignedTo;
-
-            return RedirectToAction("Index");
-
+            return RedirectToAction(nameof(Index));
         }
 
-        public ActionResult Delete(int id)
+        private bool AssetExists(int id)
         {
-            var asset = assetList.FirstOrDefault(ass => ass.id == id);
-            if (id != null || id != 0 && asset != null)
-            {
-                assetList.Remove(asset);
-            }
-            return RedirectToAction("Index");
+            return _context.Assets.Any(e => e.id == id);
         }
     }
 }

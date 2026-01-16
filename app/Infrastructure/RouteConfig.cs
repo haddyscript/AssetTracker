@@ -18,6 +18,16 @@ namespace AssetTracker.Infrastructure
                 pattern: "/register/admin",
                 defaults: new { controller = "Admin", action = "Register" });
 
+            endpoints.MapControllerRoute(
+               name: "create asset",
+               pattern: "/create/asset",
+               defaults: new { controller = "Asset", action = "Create" });
+
+            endpoints.MapControllerRoute(
+                name: "update asset detail",
+                pattern: "update/asset/{id?}",
+                defaults: new { controller = "Asset", action = "Edit" });
+
 
             endpoints.MapControllerRoute(
                 name: "login",

@@ -41,4 +41,32 @@ CREATE TABLE [dbo].[users] (
 ALTER TABLE [dbo].[users] ADD
 	FOREIGN KEY ([user_profile]) REFERENCES [user_profile] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
+
+DROP TABLE IF EXISTS [dbo].[assets];
+CREATE TABLE [dbo].[assets] (
+	[id] int NOT NULL IDENTITY PRIMARY KEY,
+	[asset_tag] nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[asset_name] nvarchar(150) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[description] nvarchar(500) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[category] nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[brand] nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[model] nvarchar(100) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[serial_number] nvarchar(150) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[purchase_date] date NOT NULL,
+	[purchase_price] decimal(18,2) NOT NULL,
+	[status] nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL DEFAULT 'Available',
+	[condition] nvarchar(50) COLLATE SQL_Latin1_General_CP1_CI_AS NOT NULL,
+	[assigned_to_user_id] int NULL,
+	[assigned_date] datetime NULL,
+	[created_at] datetime NOT NULL DEFAULT '(getdate())',
+	[updated_at] datetime NOT NULL DEFAULT '(getdate())',
+	CONSTRAINT [UQ__assets__BED14FEEB3AC3B50] UNIQUE ([serial_number]),
+	CONSTRAINT [UQ__assets__1FACF043F8E3B474] UNIQUE ([asset_tag])
+);
+
+
+ALTER TABLE [dbo].[assets] ADD
+	FOREIGN KEY ([assigned_to_user_id]) REFERENCES [users] ([id]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+
 -- 2026-01-16 07:18:10 UTC
