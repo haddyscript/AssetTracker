@@ -34,7 +34,7 @@ namespace AssetTracker.Models
 
         [Required]
         [ForeignKey("UserProfile")]
-        public int user_profile { get; set; }
+        public int ?user_profile { get; set; }
 
         public UserProfile UserProfile { get; set; }
 
