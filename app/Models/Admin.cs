@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AssetTracker.Models
 {
+    [Table("admins")]
     public class Admin
     {
         [Key]
@@ -33,5 +34,14 @@ namespace AssetTracker.Models
         public DateTime created_at { get; set; } = DateTime.Now;
 
         public DateTime updated_at { get; set; } = DateTime.Now;
+
+        // -------------------------------
+        // user profile foreign key
+
+        [Required]
+        [ForeignKey("UserProfile")]
+        public int? user_profile { get; set; }
+
+        public UserProfile UserProfile { get; set; }
     }
 }

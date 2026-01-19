@@ -1,0 +1,45 @@
+@model AssetTracker.Models.UserProfilePermission
+
+<div class="container mt-4">
+    <h2>Permission Details</h2>
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Profile Name</dt>
+                <dd class="col-sm-9">@Model.UserProfile?.profile_name</dd>
+
+                <dt class="col-sm-3">Module Name</dt>
+                <dd class="col-sm-9">@Model.module_name</dd>
+
+                <dt class="col-sm-3">Can View</dt>
+                <dd class="col-sm-9">@(Model.can_view ? "Yes" : "No")</dd>
+
+                <dt class="col-sm-3">Can Create</dt>
+                <dd class="col-sm-9">@(Model.can_create ? "Yes" : "No")</dd>
+
+                <dt class="col-sm-3">Can Edit</dt>
+                <dd class="col-sm-9">@(Model.can_edit ? "Yes" : "No")</dd>
+
+                <dt class="col-sm-3">Can Delete</dt>
+                <dd class="col-sm-9">@(Model.can_delete ? "Yes" : "No")</dd>
+
+                <dt class="col-sm-3">Status</dt>
+                <dd class="col-sm-9">@(Model.status == 1 ? "Active" : "Inactive")</dd>
+
+                <dt class="col-sm-3">Created At</dt>
+                <dd class="col-sm-9">@Model.created_at.ToString("g")</dd>
+
+                <dt class="col-sm-3">Updated At</dt>
+                <dd class="col-sm-9">@Model.updated_at.ToString("g")</dd>
+            </dl>
+        </div>
+    </div>
+    <div class="mt-3">
+        <a href="@Url.Action("Edit", new { id = Model.id })" class="btn btn-warning">
+            <i class="fas fa-edit"></i> Edit
+        </a>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+</div>

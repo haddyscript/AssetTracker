@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AssetTracker.Models
 {
+    [Table("assets")]
     public class Asset
     {
         [Key]

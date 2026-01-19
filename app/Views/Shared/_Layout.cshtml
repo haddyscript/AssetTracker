@@ -38,52 +38,7 @@
 
                         <!-- Main Navigation -->
                         <ul class="navbar-nav me-auto">
-                            <li class="nav-item">
-                                <a class="nav-link text-dark @(ViewContext.RouteData.Values["controller"]?.ToString() == "Home" && ViewContext.RouteData.Values["action"]?.ToString() == "Index" ? "active" : "")"
-                                   asp-controller="Home" asp-action="Index">
-                                    <i class="fas fa-tachometer-alt me-1"></i>Dashboard
-                                </a>
-                            </li>
-
-                            @if (userRole == "Admin")
-                            {
-                                <!-- Admin Navigation -->
-                                <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="fas fa-cog me-1"></i>Management
-                                    </a>
-                                    <ul class="dropdown-menu" aria-labelledby="adminDropdown">
-                                        <li><a class="dropdown-item" asp-controller="Asset" asp-action="Index">
-                                            <i class="fas fa-box me-2"></i>Assets
-                                        </a></li>
-                                        <li><a class="dropdown-item" asp-controller="Admin" asp-action="Register">
-                                            <i class="fas fa-user-plus me-2"></i>Add Admin
-                                        </a></li>
-                                        <li><a class="dropdown-item" asp-controller="Users" asp-action="Register">
-                                            <i class="fas fa-user-plus me-2"></i>Add User
-                                        </a></li>
-                                        <li><hr class="dropdown-divider"></li>
-                                        <li><a class="dropdown-item" asp-controller="Home" asp-action="Privacy">
-                                            <i class="fas fa-shield-alt me-2"></i>Privacy
-                                        </a></li>
-                                    </ul>
-                                </li>
-                            }
-                            else
-                            {
-                                <!-- User Navigation -->
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark @(ViewContext.RouteData.Values["controller"]?.ToString() == "Asset" ? "active" : "")"
-                                       asp-controller="Asset" asp-action="Index">
-                                        <i class="fas fa-box me-1"></i>My Assets
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-controller="Home" asp-action="Privacy">
-                                        <i class="fas fa-info-circle me-1"></i>Help
-                                    </a>
-                                </li>
-                            }
+                            @await Component.InvokeAsync("Menu")
                         </ul>
 
                         <!-- User Profile Dropdown -->

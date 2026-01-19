@@ -1,0 +1,61 @@
+@model IEnumerable<AssetTracker.Models.UserProfilePermission>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">User Profile Permissions</h2>
+        <a href="@Url.Action("Create")" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Permission
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle"></i> No permissions found. <a href="@Url.Action("Create")">Add your first permission</a>.
+        </div>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover align-middle">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Profile Name</th>
+                        <th>Module Name</th>
+                        <th>Can View</th>
+                        <th>Can Create</th>
+                        <th>Can Edit</th>
+                        <th>Can Delete</th>
+                        <th>Status</th>
+                        <th style="width: 200px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var permission in Model)
+                    {
+                        <tr>
+                            <td>@permission.UserProfile?.profile_name</td>
+                            <td>@permission.module_name</td>
+                            <td>@(permission.can_view ? "Yes" : "No")</td>
+                            <td>@(permission.can_create ? "Yes" : "No")</td>
+                            <td>@(permission.can_edit ? "Yes" : "No")</td>
+                            <td>@(permission.can_delete ? "Yes" : "No")</td>
+                            <td>@(permission.status == 1 ? "Active" : "Inactive")</td>
+                            <td>
+                                <a href="@Url.Action("Details", new { id = permission.id })" class="btn btn-sm btn-info">
+                                    <i class="fas fa-eye"></i> Details
+                                </a>
+                                <a href="@Url.Action("Edit", new { id = permission.id })" class="btn btn-sm btn-warning">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="@Url.Action("Delete", new { id = permission.id })" class="btn btn-sm btn-danger">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+</div>

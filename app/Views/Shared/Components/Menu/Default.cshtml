@@ -1,0 +1,26 @@
+@model IEnumerable<AssetTracker.Models.Menu>
+
+@if (Model.Any())
+{
+    @foreach (var menu in Model.Where(m => m.parent_id == null))
+    {
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown@menu.id" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                @if (!string.IsNullOrEmpty(menu.icon))
+                {
+                    <i class="@menu.icon me-1"></i>
+                }
+                @menu.menu_name
+            </a>
+            @if (menu.ChildMenus.Any())
+            {
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown@menu.id">
+                    @foreach (var child in menu.ChildMenus.OrderBy(c => c.sort_order))
+                    {
+                        <li><a class="dropdown-item" asp-route="@child.route">@(string.IsNullOrEmpty(child.icon) ? "" : $"<i class='{child.icon} me-1'></i>")@child.menu_name</a></li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+}

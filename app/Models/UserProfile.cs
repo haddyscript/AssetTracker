@@ -1,8 +1,9 @@
-﻿
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AssetTracker.Models
 {
+	[Table("user_profile")]
 	public class UserProfile
 	{
         [Key]

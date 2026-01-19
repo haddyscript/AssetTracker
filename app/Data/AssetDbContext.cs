@@ -14,6 +14,10 @@ namespace AssetTracker.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<AssetRequest> AssetRequests { get; set; }
+        public DbSet<UserProfile> UserProfiles { get; set; }
+        public DbSet<UserProfilePermission> UserProfilePermissions { get; set; }
+        public DbSet<Menu> Menus { get; set; }
+        public DbSet<UserProfileMenu> UserProfileMenus { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
