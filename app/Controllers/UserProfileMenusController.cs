@@ -83,6 +83,10 @@ namespace AssetTracker.Controllers
         {
             if (!await IsAdmin()) return RedirectToAction("AccessDenied", "Home");
 
+            // Remove navigation properties from model state validation
+            ModelState.Remove("Menu");
+            ModelState.Remove("UserProfile");
+
             // Check for duplicate
             var existing = await _context.UserProfileMenus
                 .FirstOrDefaultAsync(upm => upm.user_profile_id == userProfileMenu.user_profile_id && upm.menu_id == userProfileMenu.menu_id);
@@ -135,6 +139,10 @@ namespace AssetTracker.Controllers
             {
                 return NotFound();
             }
+
+            // Remove navigation properties from model state validation
+            ModelState.Remove("Menu");
+            ModelState.Remove("UserProfile");
 
             // Check for duplicate excluding current
             var existing = await _context.UserProfileMenus

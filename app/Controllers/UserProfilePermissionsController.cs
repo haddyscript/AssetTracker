@@ -70,6 +70,7 @@ namespace AssetTracker.Controllers
             if (!await IsAdmin()) return RedirectToAction("AccessDenied", "Home");
 
             ViewData["UserProfiles"] = await _context.UserProfiles.ToListAsync();
+            ViewData["MenuAssignments"] = await GetMenuAssignments();
             return View();
         }
 
@@ -88,6 +89,13 @@ namespace AssetTracker.Controllers
                 ModelState.AddModelError("", "A permission for this user profile and module already exists.");
             }
 
+            // Validate that the module is accessible for the user profile
+            var accessibleMenus = await GetAccessibleMenus(permission.user_profile_id);
+            if (!accessibleMenus.Contains(permission.module_name))
+            {
+                ModelState.AddModelError("module_name", "Selected module is not accessible for this user profile.");
+            }
+
             if (ModelState.IsValid)
             {
                 permission.created_at = DateTime.Now;
@@ -97,6 +105,7 @@ namespace AssetTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserProfiles"] = await _context.UserProfiles.ToListAsync();
+            ViewData["MenuAssignments"] = await GetMenuAssignments();
             return View(permission);
         }
 
@@ -116,6 +125,8 @@ namespace AssetTracker.Controllers
                 return NotFound();
             }
             ViewData["UserProfiles"] = await _context.UserProfiles.ToListAsync();
+            ViewData["AvailableModules"] = await GetAccessibleMenus(permission.user_profile_id);
+            ViewData["MenuAssignments"] = await GetMenuAssignments();
             return View(permission);
         }
 
@@ -137,6 +148,13 @@ namespace AssetTracker.Controllers
             if (existing != null)
             {
                 ModelState.AddModelError("", "A permission for this user profile and module already exists.");
+            }
+
+            // Validate that the module is accessible for the user profile
+            var accessibleMenus = await GetAccessibleMenus(permission.user_profile_id);
+            if (!accessibleMenus.Contains(permission.module_name))
+            {
+                ModelState.AddModelError("module_name", "Selected module is not accessible for this user profile.");
             }
 
             if (ModelState.IsValid)
@@ -161,6 +179,8 @@ namespace AssetTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserProfiles"] = await _context.UserProfiles.ToListAsync();
+            ViewData["AvailableModules"] = await GetAccessibleMenus(permission.user_profile_id);
+            ViewData["MenuAssignments"] = await GetMenuAssignments();
             return View(permission);
         }
 
@@ -204,6 +224,30 @@ namespace AssetTracker.Controllers
         private bool UserProfilePermissionExists(int id)
         {
             return _context.UserProfilePermissions.Any(e => e.id == id);
+        }
+
+        private async Task<Dictionary<int, List<string>>> GetMenuAssignments()
+        {
+            var menuAssignments = await _context.UserProfileMenus
+                .Include(upm => upm.Menu)
+                .Where(upm => upm.can_view && upm.status == 1 && upm.Menu.is_active)
+                .Select(upm => new { upm.user_profile_id, upm.Menu.menu_name })
+                .ToListAsync();
+
+            var dict = menuAssignments.GroupBy(x => x.user_profile_id)
+                .ToDictionary(g => g.Key, g => g.Select(x => x.menu_name).ToList());
+
+            return dict;
+        }
+
+        private async Task<List<string>> GetAccessibleMenus(int userProfileId)
+        {
+            var menus = await _context.UserProfileMenus
+                .Include(upm => upm.Menu)
+                .Where(upm => upm.user_profile_id == userProfileId && upm.can_view && upm.status == 1 && upm.Menu.is_active)
+                .Select(upm => upm.Menu.menu_name)
+                .ToListAsync();
+            return menus;
         }
     }
 }

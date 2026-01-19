@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace AssetTracker.Models
 {
@@ -29,6 +30,7 @@ namespace AssetTracker.Models
 
         // Navigation property
         [ForeignKey("user_profile_id")]
+        [ValidateNever]
         public UserProfile UserProfile { get; set; }
     }
 }

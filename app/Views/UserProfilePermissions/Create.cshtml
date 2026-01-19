@@ -15,7 +15,9 @@
                 </div>
                 <div class="mb-3">
                     <label asp-for="module_name" class="form-label"></label>
-                    <input asp-for="module_name" class="form-control" required />
+                    <select asp-for="module_name" class="form-select" id="moduleSelect" required>
+                        <option value="">Select Module</option>
+                    </select>
                     <span asp-validation-for="module_name" class="text-danger"></span>
                 </div>
                 <div class="mb-3 form-check">
@@ -49,4 +51,22 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        const menuAssignments = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(ViewData["MenuAssignments"]));
+        const userProfileSelect = document.getElementById('user_profile_id');
+        const moduleSelect = document.getElementById('moduleSelect');
+
+        userProfileSelect.addEventListener('change', function() {
+            const selectedProfileId = parseInt(this.value);
+            moduleSelect.innerHTML = '<option value="">Select Module</option>';
+            if (selectedProfileId && menuAssignments[selectedProfileId]) {
+                menuAssignments[selectedProfileId].forEach(menu => {
+                    const option = document.createElement('option');
+                    option.value = menu;
+                    option.text = menu;
+                    moduleSelect.appendChild(option);
+                });
+            }
+        });
+    </script>
 }
