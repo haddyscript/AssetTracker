@@ -103,6 +103,10 @@ namespace AssetTracker.Infrastructure
                 pattern: "/user-profile-menus/create",
                 defaults: new { controller = "UserProfileMenus", action = "Create" });
 
+            endpoints.MapControllerRoute(
+                name: "privacy",
+                pattern: "privacy",
+                defaults: new { controller = "Home", action = "Privacy" });
             
             endpoints.MapControllerRoute(
                 name: "default",

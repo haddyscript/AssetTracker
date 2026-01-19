@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 
 namespace AssetTracker.Models
 {
@@ -33,8 +35,10 @@ namespace AssetTracker.Models
 
         // Navigation properties
         [ForeignKey("parent_id")]
-        public Menu ParentMenu { get; set; }
+        [BindNever]
+        public Menu? ParentMenu { get; set; }
 
-        public ICollection<Menu> ChildMenus { get; set; }
+        [BindNever]
+        public ICollection<Menu>? ChildMenus { get; set; }
     }
 }

@@ -72,7 +72,7 @@ namespace AssetTracker.Controllers
             if (!await IsAdmin()) return RedirectToAction("AccessDenied", "Home");
 
             ViewData["UserProfiles"] = await _context.UserProfiles.ToListAsync();
-            ViewData["Menus"] = await _context.Menus.ToListAsync();
+            ViewData["Menus"] = await _context.Menus.Where(m => m.parent_id == null).ToListAsync();
             return View();
         }
 
@@ -104,7 +104,7 @@ namespace AssetTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserProfiles"] = await _context.UserProfiles.ToListAsync();
-            ViewData["Menus"] = await _context.Menus.ToListAsync();
+            ViewData["Menus"] = await _context.Menus.Where(m => m.parent_id == null).ToListAsync();
             return View(userProfileMenu);
         }
 
@@ -124,7 +124,7 @@ namespace AssetTracker.Controllers
                 return NotFound();
             }
             ViewData["UserProfiles"] = await _context.UserProfiles.ToListAsync();
-            ViewData["Menus"] = await _context.Menus.ToListAsync();
+            ViewData["Menus"] = await _context.Menus.Where(m => m.parent_id == null).ToListAsync();
             return View(userProfileMenu);
         }
 
@@ -174,7 +174,7 @@ namespace AssetTracker.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["UserProfiles"] = await _context.UserProfiles.ToListAsync();
-            ViewData["Menus"] = await _context.Menus.ToListAsync();
+            ViewData["Menus"] = await _context.Menus.Where(m => m.parent_id == null).ToListAsync();
             return View(userProfileMenu);
         }
 
