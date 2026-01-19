@@ -42,9 +42,6 @@
                             <td>@(permission.can_delete ? "Yes" : "No")</td>
                             <td>@(permission.status == 1 ? "Active" : "Inactive")</td>
                             <td>
-                                <a href="@Url.Action("Details", new { id = permission.id })" class="btn btn-sm btn-info">
-                                    <i class="fas fa-eye"></i> Details
-                                </a>
                                 <a href="@Url.Action("Edit", new { id = permission.id })" class="btn btn-sm btn-warning">
                                     <i class="fas fa-edit"></i> Edit
                                 </a>

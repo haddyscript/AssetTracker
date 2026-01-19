@@ -159,6 +159,115 @@ namespace AssetTracker.Controllers
         }
 
         [HttpGet]
+        public async Task<IActionResult> Index()
+        {
+            var users = await _dbData.Users.Include(u => u.UserProfile).ToListAsync();
+            return View(users);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _dbData.Users
+                .Include(u => u.UserProfile)
+                .FirstOrDefaultAsync(u => u.id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _dbData.Users.FindAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            ViewBag.UserProfiles = await _dbData.UserProfiles.ToListAsync();
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, User user)
+        {
+            if (id != user.id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    user.updated_at = DateTime.Now;
+                    _dbData.Update(user);
+                    await _dbData.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!UserExists(user.id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(user);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _dbData.Users
+                .Include(u => u.UserProfile)
+                .FirstOrDefaultAsync(u => u.id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return View(user);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var user = await _dbData.Users.FindAsync(id);
+            if (user != null)
+            {
+                _dbData.Users.Remove(user);
+                await _dbData.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
         public IActionResult Register()
 		{
 			return View();
@@ -210,7 +319,10 @@ namespace AssetTracker.Controllers
 
             return new RegistrationResult { Success = false, ErrorMessage = "Failed to save user to database." };
         }
-
+        private bool UserExists(int id)
+        {
+            return _dbData.Users.Any(e => e.id == id);
+        }
         private class RegistrationResult
         {
             public bool Success { get; set; }

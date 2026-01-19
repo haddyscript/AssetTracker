@@ -1,0 +1,81 @@
+@model AssetTracker.Models.Menu
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2><i class="fas fa-trash-alt text-danger"></i> Delete Menu</h2>
+        <a href="@Url.Action("Index")" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to List
+        </a>
+    </div>
+
+    <div class="card border-danger">
+        <div class="card-header bg-danger text-white">
+            <h5 class="mb-0"><i class="fas fa-exclamation-triangle"></i> Confirm Deletion</h5>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <strong>Warning!</strong> This action cannot be undone. Are you sure you want to delete this menu?
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Menu Name:</dt>
+                        <dd class="col-sm-8">@Model.menu_name</dd>
+
+                        <dt class="col-sm-4">Route:</dt>
+                        <dd class="col-sm-8">@Model.route</dd>
+
+                        <dt class="col-sm-4">Icon:</dt>
+                        <dd class="col-sm-8">@(string.IsNullOrEmpty(Model.icon) ? "N/A" : Model.icon)</dd>
+
+                        <dt class="col-sm-4">Parent Menu:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.ParentMenu != null)
+                            {
+                                @Model.ParentMenu.menu_name
+                            }
+                            else
+                            {
+                                <span class="text-muted">No parent</span>
+                            }
+                        </dd>
+                    </dl>
+                </div>
+                <div class="col-md-6">
+                    <dl class="row">
+                        <dt class="col-sm-4">Sort Order:</dt>
+                        <dd class="col-sm-8">@Model.sort_order</dd>
+
+                        <dt class="col-sm-4">Is Active:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge @(Model.is_active ? "bg-success" : "bg-secondary")">
+                                @(Model.is_active ? "Active" : "Inactive")
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-4">Created:</dt>
+                        <dd class="col-sm-8">@Model.created_at.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+
+                        <dt class="col-sm-4">Last Updated:</dt>
+                        <dd class="col-sm-8">@Model.updated_at.ToString("yyyy-MM-dd HH:mm:ss")</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <form asp-action="Delete" method="post">
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.id)
+
+                <div class="d-flex gap-2 mt-3">
+                    <button type="submit" class="btn btn-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </button>
+                    <a href="@Url.Action("Index")" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

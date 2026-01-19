@@ -7,7 +7,11 @@ namespace AssetTracker.Infrastructure
     {
         public static void RegisterRoutes(this IEndpointRouteBuilder endpoints)
         {
-            
+            endpoints.MapControllerRoute(
+               name: "register",
+               pattern: "/list-of-user",
+               defaults: new { controller = "Users", action = "Index" });
+
             endpoints.MapControllerRoute(
                 name: "register",
                 pattern: "/register/user",
