@@ -6,6 +6,8 @@
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="id" />
+        <input type="hidden" asp-for="user_profile_id" />
+        <input type="hidden" asp-for="menu_id" />
         <div class="card">
             <div class="card-body">
                 <div class="mb-3">

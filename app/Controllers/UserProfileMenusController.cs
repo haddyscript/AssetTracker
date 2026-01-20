@@ -87,6 +87,16 @@ namespace AssetTracker.Controllers
             ModelState.Remove("Menu");
             ModelState.Remove("UserProfile");
 
+            // Validate foreign keys exist
+            if (!await _context.UserProfiles.AnyAsync(up => up.id == userProfileMenu.user_profile_id))
+            {
+                ModelState.AddModelError("user_profile_id", "Selected user profile does not exist.");
+            }
+            if (!await _context.Menus.AnyAsync(m => m.id == userProfileMenu.menu_id))
+            {
+                ModelState.AddModelError("menu_id", "Selected menu does not exist.");
+            }
+
             // Check for duplicate
             var existing = await _context.UserProfileMenus
                 .FirstOrDefaultAsync(upm => upm.user_profile_id == userProfileMenu.user_profile_id && upm.menu_id == userProfileMenu.menu_id);
@@ -143,6 +153,16 @@ namespace AssetTracker.Controllers
             // Remove navigation properties from model state validation
             ModelState.Remove("Menu");
             ModelState.Remove("UserProfile");
+
+            // Validate foreign keys exist
+            if (!await _context.UserProfiles.AnyAsync(up => up.id == userProfileMenu.user_profile_id))
+            {
+                ModelState.AddModelError("user_profile_id", "Selected user profile does not exist.");
+            }
+            if (!await _context.Menus.AnyAsync(m => m.id == userProfileMenu.menu_id))
+            {
+                ModelState.AddModelError("menu_id", "Selected menu does not exist.");
+            }
 
             // Check for duplicate excluding current
             var existing = await _context.UserProfileMenus

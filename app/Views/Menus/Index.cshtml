@@ -11,46 +11,72 @@
     @if (!Model.Any())
     {
         <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> No menus found. <a href="@Url.Action("Create")">Add your first menu</a>.
+            <i class="fas fa-info-circle"></i> No menus found.
+            <a href="@Url.Action("Create")">Add your first menu</a>.
         </div>
     }
     else
     {
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover align-middle">
-                <thead class="table-dark">
+        <table id="menusTable" class="table table-bordered table-striped table-hover align-middle w-100">
+            <thead class="table-dark">
+                <tr>
+                    <th>Menu Name</th>
+                    <th>Route</th>
+                    <th>Icon</th>
+                    <th>Parent Menu</th>
+                    <th>Sort Order</th>
+                    <th>Active</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var menu in Model)
+                {
                     <tr>
-                        <th>Menu Name</th>
-                        <th>Route</th>
-                        <th>Icon</th>
-                        <th>Parent Menu</th>
-                        <th>Sort Order</th>
-                        <th>Active</th>
-                        <th style="width: 200px;">Actions</th>
+                        <td>@menu.menu_name</td>
+                        <td>@menu.route</td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(menu.icon))
+                            {
+                                <i class="@menu.icon"></i>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+                        <td>@(menu.ParentMenu?.menu_name ?? "-")</td>
+                        <td>@menu.sort_order</td>
+                        <td>@(menu.is_active ? "Yes" : "No")</td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@menu.id" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@menu.id" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var menu in Model)
-                    {
-                        <tr>
-                            <td>@menu.menu_name</td>
-                            <td>@menu.route</td>
-                            <td>@(string.IsNullOrEmpty(menu.icon) ? "-" : $"<i class='{menu.icon}'></i>")</td>
-                            <td>@(menu.ParentMenu?.menu_name ?? "-")</td>
-                            <td>@menu.sort_order</td>
-                            <td>@(menu.is_active ? "Yes" : "No")</td>
-                            <td>
-                                <a href="@Url.Action("Edit", new { id = menu.id })" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <a href="@Url.Action("Delete", new { id = menu.id })" class="btn btn-sm btn-danger">
-                                    <i class="fas fa-trash"></i> Delete
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
     }
 </div>
+
+@section Scripts {
+    <script>$(document).ready(function () {
+            $('#menusTable').DataTable({
+                responsive: true,
+                pageLength: 10,
+                lengthMenu: [5, 10, 25, 50],
+                order: [[0, 'asc']],
+                columnDefs: [
+                    { orderable: false, targets: [2, 6] } // Icon + Actions not sortable
+                ]
+            });
+        });</script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+}

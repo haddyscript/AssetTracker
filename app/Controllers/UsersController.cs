@@ -198,7 +198,15 @@ namespace AssetTracker.Controllers
                 return NotFound();
             }
 
-            ViewBag.UserProfiles = await _dbData.UserProfiles.ToListAsync();
+            ViewData["UserProfiles"] = new List<UserProfile>();
+            try
+            {
+                ViewData["UserProfiles"] = await _dbData.UserProfiles.ToListAsync();
+            }
+            catch
+            {
+                // Keep empty list
+            }
             return View(user);
         }
 
@@ -211,12 +219,28 @@ namespace AssetTracker.Controllers
                 return NotFound();
             }
 
+            // Remove properties not in the form
+            ModelState.Remove("password");
+            ModelState.Remove("UserProfile");
+            ModelState.Remove("created_at");
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    user.updated_at = DateTime.Now;
-                    _dbData.Update(user);
+                    var existingUser = await _dbData.Users.FindAsync(id);
+                    if (existingUser == null)
+                    {
+                        return NotFound();
+                    }
+
+                    // Update only the fields from the form
+                    existingUser.username = user.username;
+                    existingUser.full_name = user.full_name;
+                    existingUser.email = user.email;
+                    existingUser.user_profile = user.user_profile;
+                    existingUser.updated_at = DateTime.Now;
+
                     await _dbData.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -231,6 +255,15 @@ namespace AssetTracker.Controllers
                     }
                 }
                 return RedirectToAction(nameof(Index));
+            }
+            ViewData["UserProfiles"] = new List<UserProfile>();
+            try
+            {
+                ViewData["UserProfiles"] = await _dbData.UserProfiles.ToListAsync();
+            }
+            catch
+            {
+                // Keep empty list
             }
             return View(user);
         }

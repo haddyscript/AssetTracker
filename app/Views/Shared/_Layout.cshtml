@@ -62,17 +62,23 @@
                                         <span class="badge bg-@(userRole == "Admin" ? "danger" : "primary") ms-2">@userRole</span>
                                     </li>
                                     <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item" href="#">
-                                        <i class="fas fa-user me-2"></i>Profile Settings
-                                    </a></li>
-                                    <li><a class="dropdown-item" href="#">
-                                        <i class="fas fa-bell me-2"></i>Notifications
-                                    </a></li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-user me-2"></i>Profile Settings
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a class="dropdown-item" href="#">
+                                            <i class="fas fa-bell me-2"></i>Notifications
+                                        </a>
+                                    </li>
                                     @if (userRole == "Admin")
                                     {
-                                        <li><a class="dropdown-item" href="#">
-                                            <i class="fas fa-chart-bar me-2"></i>Reports
-                                        </a></li>
+                                        <li>
+                                            <a class="dropdown-item" href="#">
+                                                <i class="fas fa-chart-bar me-2"></i>Reports
+                                            </a>
+                                        </li>
                                     }
                                     <li><hr class="dropdown-divider"></li>
                                     <li>
@@ -154,54 +160,58 @@
     <button class="scroll-to-top" id="scrollToTop" title="Scroll to Top">
         <i class="fas fa-arrow-up"></i>
     </button>
-        @if (TempData["SuccessMessage"] != null)
-        {
-            <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="toast align-items-center text-white bg-success border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-check-circle me-2"></i>@TempData["SuccessMessage"]
                 </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-        }
+        </div>
+    }
 
-        @if (TempData["ErrorMessage"] != null)
-        {
-            <div class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <i class="fas fa-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="toast align-items-center text-white bg-danger border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
                 </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-        }
+        </div>
+    }
 
-        @if (TempData["InfoMessage"] != null)
-        {
-            <div class="toast align-items-center text-white bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
-                <div class="d-flex">
-                    <div class="toast-body">
-                        <i class="fas fa-info-circle me-2"></i>@TempData["InfoMessage"]
-                    </div>
-                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    @if (TempData["InfoMessage"] != null)
+    {
+        <div class="toast align-items-center text-white bg-info border-0" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="5000">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="fas fa-info-circle me-2"></i>@TempData["InfoMessage"]
                 </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
-        }
+        </div>
+    }
     </div>
+    <!-- jquery table -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     <!-- Custom Interactive JavaScript -->
-    <script>
-        $(document).ready(function() {
+    <script>$(document).ready(function () {
             // Initialize toasts
             $('.toast').toast('show');
 
             // Add loading animation to forms
-            $('form').on('submit', function() {
+            $('form').on('submit', function () {
                 var submitBtn = $(this).find('button[type="submit"]');
                 if (!submitBtn.hasClass('no-loading')) {
                     submitBtn.prop('disabled', true);
@@ -210,7 +220,7 @@
             });
 
             // Smooth scrolling for anchor links
-            $('a[href^="#"]').on('click', function(event) {
+            $('a[href^="#"]').on('click', function (event) {
                 var target = $(this.getAttribute('href'));
                 if (target.length) {
                     event.preventDefault();
@@ -221,7 +231,7 @@
             });
 
             // Add confirmation to logout
-            $('form[action*="Logout"]').on('submit', function(e) {
+            $('form[action*="Logout"]').on('submit', function (e) {
                 if (!confirm('Are you sure you want to logout?')) {
                     e.preventDefault();
                     return false;
@@ -229,7 +239,7 @@
             });
 
             // Add ripple effect to buttons
-            $('.btn, .nav-link').on('click', function(e) {
+            $('.btn, .nav-link').on('click', function (e) {
                 var ripple = $('<span class="ripple-effect"></span>');
                 var btn = $(this);
                 var x = e.pageX - btn.offset().left;
@@ -242,13 +252,13 @@
 
                 btn.append(ripple);
 
-                setTimeout(function() {
+                setTimeout(function () {
                     ripple.remove();
                 }, 600);
             });
 
             // Auto-hide alerts after 5 seconds
-            setTimeout(function() {
+            setTimeout(function () {
                 $('.alert').fadeOut('slow');
             }, 5000);
 
@@ -257,7 +267,7 @@
 
             // Highlight current page in navigation
             var currentPath = window.location.pathname;
-            $('.nav-link').each(function() {
+            $('.nav-link').each(function () {
                 var href = $(this).attr('href');
                 if (href && currentPath.includes(href.replace('~', ''))) {
                     $(this).addClass('active');
@@ -265,7 +275,7 @@
             });
 
             // Scroll to top functionality
-            $(window).scroll(function() {
+            $(window).scroll(function () {
                 if ($(this).scrollTop() > 100) {
                     $('#scrollToTop').addClass('show');
                 } else {
@@ -273,19 +283,18 @@
                 }
             });
 
-            $('#scrollToTop').click(function() {
+            $('#scrollToTop').click(function () {
                 $('html, body').animate({ scrollTop: 0 }, 500);
                 return false;
             });
         });
 
         // Add loading state to navigation links
-        $(document).on('click', '.nav-link:not(.dropdown-toggle)', function() {
+        $(document).on('click', '.nav-link:not(.dropdown-toggle)', function () {
             if ($(this).attr('href') && $(this).attr('href') !== '#') {
                 $(this).find('i').addClass('fa-spin');
             }
-        });
-    </script>
+        });</script>
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>

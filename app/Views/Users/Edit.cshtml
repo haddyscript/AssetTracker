@@ -1,5 +1,9 @@
 @model AssetTracker.Models.User
 
+@{
+    var profiles = ViewData["UserProfiles"] as IEnumerable<AssetTracker.Models.UserProfile> ?? new List<AssetTracker.Models.UserProfile>();
+}
+
 <div class="container mt-4">
     <h2>Edit User</h2>
     <form asp-action="Edit" method="post">
@@ -24,7 +28,7 @@
                 </div>
                 <div class="mb-3">
                     <label asp-for="user_profile" class="form-label"></label>
-                    <select asp-for="user_profile" class="form-select" asp-items="@(new SelectList(ViewBag.UserProfiles, "id", "profile_name"))">
+                    <select asp-for="user_profile" class="form-select" asp-items="@(new SelectList(profiles, "id", "profile_name"))">
                         <option value="">Select Profile</option>
                     </select>
                     <span asp-validation-for="user_profile" class="text-danger"></span>
