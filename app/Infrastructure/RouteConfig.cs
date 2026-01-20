@@ -111,7 +111,17 @@ namespace AssetTracker.Infrastructure
                 name: "privacy",
                 pattern: "privacy",
                 defaults: new { controller = "Home", action = "Privacy" });
-            
+
+            endpoints.MapControllerRoute(
+                name: "user-profile",
+                pattern: "/view-user-profile",
+                defaults: new { controller = "UserProfiles", action = "Index" });
+
+            endpoints.MapControllerRoute(
+                name: "admin's lists",
+                pattern: "/list-of-admins",
+                defaults: new { controller = "Admin", action = "Index" });
+
             endpoints.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Users}/{action=Login}/{id?}");

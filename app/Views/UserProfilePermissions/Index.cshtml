@@ -8,51 +8,83 @@
         </a>
     </div>
 
-    @if (!Model.Any())
-    {
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> No permissions found. <a href="@Url.Action("Create")">Add your first permission</a>.
-        </div>
-    }
-    else
-    {
-        <div class="table-responsive">
-            <table class="table table-bordered table-striped table-hover align-middle">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Profile Name</th>
-                        <th>Module Name</th>
-                        <th>Can View</th>
-                        <th>Can Create</th>
-                        <th>Can Edit</th>
-                        <th>Can Delete</th>
-                        <th>Status</th>
-                        <th style="width: 200px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var permission in Model)
-                    {
-                        <tr>
-                            <td>@permission.UserProfile?.profile_name</td>
-                            <td>@permission.module_name</td>
-                            <td>@(permission.can_view ? "Yes" : "No")</td>
-                            <td>@(permission.can_create ? "Yes" : "No")</td>
-                            <td>@(permission.can_edit ? "Yes" : "No")</td>
-                            <td>@(permission.can_delete ? "Yes" : "No")</td>
-                            <td>@(permission.status == 1 ? "Active" : "Inactive")</td>
-                            <td>
-                                <a href="@Url.Action("Edit", new { id = permission.id })" class="btn btn-sm btn-warning">
-                                    <i class="fas fa-edit"></i> Edit
-                                </a>
-                                <a href="@Url.Action("Delete", new { id = permission.id })" class="btn btn-sm btn-danger">
-                                    <i class="fas fa-trash"></i> Delete
-                                </a>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    }
+    <table id="permissionTable" class="table table-bordered table-striped table-hover align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>Profile Name</th>
+                <th>Module Name</th>
+                <th>View</th>
+                <th>Create</th>
+                <th>Edit</th>
+                <th>Delete</th>
+                <th>Status</th>
+                <th style="width: 200px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var permission in Model)
+            {
+                <tr>
+                    <td>@permission.UserProfile?.profile_name</td>
+                    <td>@permission.module_name</td>
+
+                    <td>
+                        <span class="badge @(permission.can_view ? "bg-success" : "bg-secondary")">
+                            @(permission.can_view ? "Yes" : "No")
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge @(permission.can_create ? "bg-success" : "bg-secondary")">
+                            @(permission.can_create ? "Yes" : "No")
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge @(permission.can_edit ? "bg-success" : "bg-secondary")">
+                            @(permission.can_edit ? "Yes" : "No")
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge @(permission.can_delete ? "bg-success" : "bg-secondary")">
+                            @(permission.can_delete ? "Yes" : "No")
+                        </span>
+                    </td>
+
+                    <td>
+                        <span class="badge @(permission.status == 1 ? "bg-primary" : "bg-danger")">
+                            @(permission.status == 1 ? "Active" : "Inactive")
+                        </span>
+                    </td>
+
+                    <td>
+                        <a href="@Url.Action("Edit", new { id = permission.id })" class="btn btn-sm btn-warning">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="@Url.Action("Delete", new { id = permission.id })" class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+    <script>$(document).ready(function () {
+            $('#permissionTable').DataTable({
+                pageLength: 10,
+                order: [
+                    [0, 'asc'], // Profile Name
+                    [1, 'asc']  // Module Name
+                ],
+                columnDefs: [
+                    { orderable: false, targets: 7 } // Actions column
+                ]
+            });
+        });</script>
+}

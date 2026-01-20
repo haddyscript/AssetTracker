@@ -20,6 +20,15 @@ namespace AssetTracker.Controllers
             _dbData = context;
             _adminPasswordHasher = new PasswordHasher<Admin>();
         }
+        public async Task<IActionResult> Index()
+        {
+            var admins = await _dbData.Admins
+                .Include(a => a.UserProfile)
+                .OrderBy(a => a.username)
+                .ToListAsync();
+
+            return View(admins);
+        }
 
         [HttpGet]
         public IActionResult Register()

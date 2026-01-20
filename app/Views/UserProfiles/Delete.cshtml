@@ -1,0 +1,13 @@
+@model AssetTracker.Models.UserProfile
+
+<h2>Delete User Profile</h2>
+
+<div class="alert alert-danger">
+    Are you sure you want to delete <strong>@Model.profile_name</strong>?
+</div>
+
+<form asp-action="Delete">
+    <input type="hidden" asp-for="id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

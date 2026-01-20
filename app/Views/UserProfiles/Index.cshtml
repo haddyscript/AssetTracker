@@ -1,0 +1,59 @@
+﻿@model IEnumerable<AssetTracker.Models.UserProfile>
+
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h2>User Profiles</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Profile
+        </a>
+    </div>
+
+    <table id="profileTable" class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Profile Name</th>
+                <th style="width:180px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.id</td>
+                    <td>@item.profile_name</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.id" class="btn btn-sm btn-warning">
+                            Edit
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.id" class="btn btn-sm btn-danger">
+                            Delete
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#profileTable').DataTable({
+                pageLength: 10,
+                order: [
+                    [0, 'asc'], // Profile Name ASC
+                    [1, 'asc']  // ID ASC
+                ],
+                columnDefs: [
+                    { orderable: false, targets: 2 }
+                ]
+            });
+        });
+    </script>
+}
